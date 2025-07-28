@@ -1,0 +1,12 @@
+2025-07-28 13:31:15,224 INFO: ConQsys website startup [in c:\Users\ACER\OneDrive\Desktop\FLASK\FLASK\app.py:293]
+2025-07-28 13:31:16,410 INFO: ConQsys website startup [in c:\Users\ACER\OneDrive\Desktop\FLASK\FLASK\app.py:293]
+2025-07-28 13:32:09,918 ERROR: Database error in submit: (sqlite3.OperationalError) table queries has no column named created_at
+[SQL: INSERT INTO queries (name, email, message, created_at, is_read, ip_address) VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?, ?) RETURNING id, created_at]
+[parameters: ('Abhay', 'abhaykumarkashyap6@gmail.com', 'fefw', 0, '192.168.31.201')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8) [in c:\Users\ACER\OneDrive\Desktop\FLASK\FLASK\app.py:111]
+2025-07-28 13:33:35,063 INFO: ConQsys website startup [in c:\Users\ACER\OneDrive\Desktop\FLASK\FLASK\app.py:295]
+2025-07-28 13:33:36,139 INFO: ConQsys website startup [in c:\Users\ACER\OneDrive\Desktop\FLASK\FLASK\app.py:295]
+2025-07-28 13:34:02,405 ERROR: Database error in submit: (sqlite3.OperationalError) table queries has no column named created_at
+[SQL: INSERT INTO queries (name, email, message, created_at, is_read, ip_address) VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?, ?) RETURNING id, created_at]
+[parameters: ('Abhaykas16', 'abhaykumarkashyap6@gmail.com', 'DSA', 0, '192.168.31.201')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8) [in c:\Users\ACER\OneDrive\Desktop\FLASK\FLASK\app.py:113]

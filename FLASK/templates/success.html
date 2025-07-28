@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Sent Successfully - ConQsys</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .success-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .success-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+        }
+        
+        .success-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 60px 50px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: successPulse 2s ease-in-out;
+        }
+        
+        .success-icon i {
+            font-size: 60px;
+            color: white;
+        }
+        
+        .success-title {
+            font-size: 48px;
+            color: #28a745;
+            margin-bottom: 20px;
+            font-weight: 700;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+        
+        .success-message {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+        
+        .success-details {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out 0.9s both;
+        }
+        
+        .success-details h4 {
+            color: #005792;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .success-details p {
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .success-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 1.2s both;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #005792, #0077b6);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 87, 146, 0.3);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #6c757d;
+            padding: 13px 28px;
+            border-radius: 12px;
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: #6c757d;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .floating-element {
+            position: absolute;
+            color: rgba(255,255,255,0.3);
+            animation: floatElements 8s ease-in-out infinite;
+        }
+        
+        .floating-element:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            font-size: 24px;
+            animation-delay: 0s;
+        }
+        
+        .floating-element:nth-child(2) {
+            top: 20%;
+            right: 10%;
+            font-size: 32px;
+            animation-delay: 2s;
+        }
+        
+        .floating-element:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            font-size: 28px;
+            animation-delay: 4s;
+        }
+        
+        .floating-element:nth-child(4) {
+            bottom: 10%;
+            right: 20%;
+            font-size: 26px;
+            animation-delay: 6s;
+        }
+        
+        @keyframes successPulse {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes floatElements {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+                opacity: 0.6;
+            }
+        }
+        
+        .countdown {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 758px) {
+            .success-card {
+                padding: 40px 30px;
+            }
+            
+            .success-title {
+                font-size: 36px;
+            }
+            
+            .success-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="floating-elements">
+            <div class="floating-element">✉️</div>
+            <div class="floating-element">🚀</div>
+            <div class="floating-element">⭐</div>
+            <div class="floating-element">💫</div>
+        </div>
+        
+        <div class="success-card">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            
+            <h1 class="success-title">Message Sent!</h1>
+            
+            <p class="success-message">
+                Thank you for reaching out to us! Your message has been successfully submitted 
+                and received by our team.
+            </p>
+            
+            <div class="success-details">
+                <h4>What happens next?</h4>
+                <p>📧 You'll receive a confirmation email shortly</p>
+                <p>⏰ Our team will review your message within 24 hours</p>
+                <p>📞 We'll get back to you via email or phone as requested</p>
+                <p>🤝 Let's discuss how we can help your project succeed</p>
+            </div>
+            
+            <div class="success-actions">
+                <a href="{{ url_for('home') }}" class="btn-primary">
+                    <i class="fas fa-home"></i>
+                    Back to Homepage
+                </a>
+                <a href="{{ url_for('home') }}#services" class="btn-secondary">
+                    <i class="fas fa-cogs"></i>
+                    View Our Services
+                </a>
+            </div>
+            
+            <div style="margin-top: 30px; font-size: 14px; color: #999;">
+                <p>Redirecting to homepage in <span class="countdown" id="countdown">10</span> seconds...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script>
+        // Countdown timer for auto-redirect
+        let countdown = 10;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                window.location.href = "{{ url_for('home') }}";
+            }
+        }, 1000);
+        
+        // Pause countdown on hover
+        const successCard = document.querySelector('.success-card');
+        successCard.addEventListener('mouseenter', () => {
+            clearInterval(timer);
+            countdownElement.textContent = 'paused';
+        });
+        
+        // Add sparkle effect
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.style.cssText = `
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: #ffd700;
+                border-radius: 50%;
+                pointer-events: none;
+                animation: sparkleAnimation 1s ease-out forwards;
+                top: ${Math.random() * 100}%;
+                left: ${Math.random() * 100}%;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes sparkleAnimation {
+                    0% {
+                        opacity: 1;
+                        transform: scale(0) rotate(0deg);
+                    }
+                    100% {
+                        opacity: 0;
+                        transform: scale(1) rotate(180deg);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.querySelector('.success-container').appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.remove();
+            }, 1000);
+        }
+        
+        // Create sparkles periodically
+        setInterval(createSparkle, 500);
+        
+        console.log('✅ Success page loaded - message submitted successfully!');
+    </script>
+</body>
+</html>
