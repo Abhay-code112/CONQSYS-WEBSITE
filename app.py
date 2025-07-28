@@ -3,14 +3,20 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_moment import Moment
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
-
+import secrets # Used for generating a strong random password
 
 app = Flask(__name__, instance_relative_config=True)
 
-# Set the secret key
-app.secret_key = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
+# ### FIXED 1: SECRET_KEY
+# The secret key is now loaded from an environment variable.
+# For development, it falls back to a default key, but a warning is printed.
+# In production, you MUST set the SECRET_KEY environment variable.
+SECRET = os.environ.get('SECRET_KEY', 'dev-key-for-local-use-only')
+if SECRET == 'dev-key-for-local-use-only':
+    print("--- WARNING: USING DEFAULT SECRET KEY. SET A REAL ONE FOR PRODUCTION. ---")
+app.secret_key = SECRET
 
-# Set the database URI to point to a file inside the instance folder
+# Database configuration remains the same - this part was done well.
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(app.instance_path, 'website.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -18,16 +24,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 try:
     os.makedirs(app.instance_path)
 except OSError:
-    pass # The folder already exists.
-
-# --- END: NEW CONFIGURATION ---
+    pass
 
 # Initialize Flask-Moment and SQLAlchemy
 moment = Moment(app)
 db = SQLAlchemy(app)
 
 
-# Database Models
+# --- Database Models (No changes needed here) ---
 class Queries(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
@@ -40,7 +44,8 @@ class Admin(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)
 
-# Routes
+
+# --- Routes ---
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -60,18 +65,24 @@ def submit():
         db.session.add(query)
         db.session.commit()
         return redirect(url_for("success"))
-    # In app.py
     except Exception as e:
+        # It's good practice to log the actual error for debugging
         print(f"--- DATABASE SUBMISSION FAILED ---")
-        print(f"ERROR: {e}") # Add this line to see the real error
+        print(f"ERROR: {e}")
         print(f"------------------------------------")
         db.session.rollback()
-        flash("An error occurred. Please try again.", "error")
+        flash("An error occurred while submitting your message. Please try again.", "error")
         return redirect(url_for("home"))
-    def success():
-        return render_template("success.html")
+    
+    # ### FIXED 4: Removed the nested success() function from here.
 
-# Admin Routes
+# This is the correct success route
+@app.route("/success")
+def success():
+    return render_template("success.html")
+
+
+# --- Admin Routes (No changes needed, logic is sound) ---
 @app.route("/admin", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
@@ -116,26 +127,33 @@ def logout():
     flash("Logged out successfully!", "success")
     return redirect(url_for("home"))
 
-# Initialize database and create default admin
+
+# --- Initialize Database and Create Default Admin ---
 def init_db():
     with app.app_context():
         db.create_all()
         
-        # Create default admin if not exists
         if not Admin.query.filter_by(username='admin').first():
+            # ### FIXED 3: Default password is now strong and random.
+            # This password will be printed to the console ONCE when the app is first run.
+            # You must save this password.
+            default_password = secrets.token_hex(8)
             admin = Admin(
                 username='admin',
-                password_hash=generate_password_hash('admin123')  # Change this!
+                password_hash=generate_password_hash(default_password)
             )
             db.session.add(admin)
             db.session.commit()
-            print("Default admin created: username='admin', password='admin123'")
-# Add this route to your app.py file
+            print("--- DEFAULT ADMIN CREATED ---")
+            print(f"Username: admin")
+            print(f"Password: {default_password}  <-- SAVE THIS PASSWORD!")
+            print("-----------------------------")
 
-@app.route("/success")
-def success():
-    return render_template("success.html")
 
 if __name__ == "__main__":
     init_db()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # ### FIXED 2: Debug mode is now controlled by an environment variable.
+    # It defaults to False (safe for production).
+    # To run in debug mode locally, set FLASK_DEBUG=true in your environment.
+    is_debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    app.run(debug=is_debug_mode, host='0.0.0.0', port=5000)
